@@ -11,7 +11,7 @@ In the backend, the username should already have an encoding of the users face s
 
 If the face shown does that match that which is encoded for the username, you will receive a prompt asking you to input your password instead, which is also stored in the backend.
 
-Backend will run on MongoDB due to its ability to retain structured, semi-structured and unstructured data. I've tried to consider scaling but haven't yet found a solution considering storing image encodings isn't common practice
+Backend will run on MongoDB due to its ability to retain structured, semi-structured and unstructured data. I've tried to consider scaling but haven't yet found a solution considering storing image isn't common practice, but storing the encoding itself makes more sense since its just an array of numerical values. 
 
 Will look into CDN for image storage instead or possibly just try to upload a url of the image and then process it afterwards. 
 
