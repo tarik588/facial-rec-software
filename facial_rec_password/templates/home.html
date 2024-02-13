@@ -1,23 +1,48 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Camera Feed</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">     
+</head>
+<body>
 <div class="container">
-  <form class="myForm" method="post">
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input class="form-control input-lg" type="email" name="email" id="email" placeholder="email" />
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input class="form-control input-lg" type="password" name="password" placeholder="password" />
-    </div>
-    <div class="form-group">
-      <input type="submit" name="submit" class="btn btn-success btn-lg" value="Sign Up" />
-    </div>
-    <div class="form-group">
-        <input type="submit" name="submit" class="btn btn-success btn-lg" value="Face ID" />
-      </div>
-  </form>
-</div>
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h3 class="mt-5">Face ID</h3>
+            <img id="video_feed" width="640" height="480" ></img> <!-- Video feed -->
 
+            <form class="myForm" method="post">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input class="form-control input-lg" type="email" name="email" id="email" placeholder="email" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input class="form-control input-lg" type="password" name="password" placeholder="password" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="submit" class="btn btn-success btn-lg" value="Sign Up" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="submit" class="btn btn-success btn-lg" value="Face ID" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var video = document.getElementById('video_feed');
+    var faceImg = document.getElementById('face_img');
+
+    var source = new EventSource("/video_feed");
+    source.onmessage = function(event) {
+        var imageData = JSON.parse(event.data);
+        video.srcObject = imageData.video;
+        faceImg.src = imageData.face; 
+    };
+</script>
+</body>
+</html>
