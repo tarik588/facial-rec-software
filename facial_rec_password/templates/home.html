@@ -12,8 +12,7 @@
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
             <h3 class="mt-5">Face ID</h3>
-            <img id="video_feed" width="640" height="480" ></img> <!-- Video feed -->
-
+            <img src="{{url_for('video_feed')}}" width="100%">
             <form class="myForm" method="post">
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -33,6 +32,7 @@
         </div>
     </div>
 </div>
+
 <script>
     var video = document.getElementById('video_feed');
     var faceImg = document.getElementById('face_img');
@@ -40,8 +40,10 @@
     var source = new EventSource("/video_feed");
     source.onmessage = function(event) {
         var imageData = JSON.parse(event.data);
-        video.srcObject = imageData.video;
-        faceImg.src = imageData.face; 
+
+        if (imageData !== '') {
+            video.src = 'data:image/jpeg;base64,' + imageData;
+        }
     };
 </script>
 </body>
