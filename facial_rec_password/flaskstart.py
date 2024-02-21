@@ -9,38 +9,39 @@ import threading
 app = Flask(__name__, template_folder="templates")
 camera = cv2.VideoCapture(0)
 
-# Global variable to store the latest frame from the camera
-latest_frame = None
+def signup_facecap():
+    ret, frame = camera.read()
+    if ret:
+        image_path = "static/imagestore/captured_image.jpg"
+        cv2.imwrite(image_path, frame)
+        print("Image saved successfully!")
+        return {'status': 'success', 'message': 'Image saved successfully'}
+    else:
+        print("Failed to capture image.")
+        return {'status': 'error', 'message': 'Failed to capture image'}
 
-            
 def generate_video_feed():
-    global latest_frame
     while True:
         ret, frame = camera.read()  
         if ret:
-
             ret, buffer = cv2.imencode('.jpg', frame)
             if not ret:
                 continue
             
             frame_bytes = buffer.tobytes()
             
-            # Detect face locations in the frame
             face_locations = face_recognition.face_locations(frame)
 
             if face_locations:
-                # Convert frame to RGB format for face_recognition
                 rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
                 encodings_list = [encoding.tolist() for encoding in face_encodings]
                 encodings_json = json.dumps(encodings_list)
 
-                # Yield the face encodings along with the frame
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n' + encodings_json.encode() + b'\r\n')
             
             else:
-                # Yield only the frame if no faces are detected
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
         else:
@@ -54,8 +55,15 @@ def home():
 def video_feed():
     return Response(generate_video_feed(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route("/signup", methods=['POST'])
+def signup():
+    if 'capture' in request.form and request.form['capture'] == 'true':
+        response_data = signup_facecap()  # Call the function to capture and save the image
+        return json.dumps(response_data)
+    else:
+        exit
+
 if __name__ == '__main__':
-    #set up different thread for genererate_video_feed 
     capture_thread = threading.Thread(target=generate_video_feed)
     capture_thread.daemon = True
     capture_thread.start()

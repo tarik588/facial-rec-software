@@ -6,7 +6,8 @@ obama_image = face_recognition.load_image_file("known/obama.jpg")
 unknown_image = face_recognition.load_image_file("unknown/obama2.jpg")
 
 # Get the face encodings for each face in each image file
-
+# Since there could be more than one face in each image, it returns a list of encodings.
+# But since I know each image only has one face, I only care about the first encoding in each image, so I grab index 0.
 try:
     tarik_face_encoding = face_recognition.face_encodings(tarik_image)[0]
     obama_face_encoding = face_recognition.face_encodings(obama_image)[0]

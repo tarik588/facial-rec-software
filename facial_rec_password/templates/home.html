@@ -6,13 +6,67 @@
     <title>Camera Feed</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">     
+    <style>
+        body.dark-mode {
+            background-color: #222;
+            color: #fff;
+        }
+
+        .form-control {
+            background-color: #333;
+            color: #fff;
+            border-color: #555;
+        }
+
+        .btn {
+            background-color: #6c757d; 
+            border-color: #6c757d; 
+        }
+
+        .btn-success {
+            background-color: #17a2b8; 
+            border-color: #17a2b8; 
+        }
+
+        a {
+            color: #ffc107;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px; 
+        }
+        
+
+        #video_feed {
+            border: 5px solid #66c2ff; 
+            border-radius: 10px;
+            margin-bottom: 20px; 
+            position: relative;
+        }
+
+        .signup-link {
+            text-align: center;
+        }
+
+        .smiley {
+            position: absolute;
+            top: 5px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 50px; 
+            color: white; 
+        }
+    </style>
 </head>
-<body>
+<body class="dark-mode">
 <div class="container">
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
             <h3 class="mt-5">Face ID</h3>
-            <img src="{{url_for('video_feed')}}" width="100%">
+            <img id="video_feed" src="{{url_for('video_feed')}}" width="100%">
+             <div class="smiley"> Smile 😊</div> 
             <form class="myForm" method="post">
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -22,13 +76,13 @@
                     <label for="password">Password</label>
                     <input class="form-control input-lg" type="password" name="password" placeholder="password" />
                 </div>
-                <div class="form-group">
-                    <input type="submit" name="submit" class="btn btn-success btn-lg" value="Sign Up" />
-                </div>
-                <div class="form-group">
+                <div class="button-group">
                     <input type="submit" name="submit" class="btn btn-success btn-lg" value="Face ID" />
                 </div>
             </form>
+            <div class="signup-link">
+                <a href="{{url_for('signup')}}">Don't have an account? Sign up here</a>
+            </div>
         </div>
     </div>
 </div>
