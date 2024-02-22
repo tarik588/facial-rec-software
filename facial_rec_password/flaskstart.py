@@ -9,16 +9,16 @@ import threading
 app = Flask(__name__, template_folder="templates")
 camera = cv2.VideoCapture(0)
 
-def signup_facecap():
-    ret, frame = camera.read()
-    if ret:
-        image_path = "static/imagestore/captured_image.jpg"
-        cv2.imwrite(image_path, frame)
-        print("Image saved successfully!")
-        return {'status': 'success', 'message': 'Image saved successfully'}
-    else:
-        print("Failed to capture image.")
-        return {'status': 'error', 'message': 'Failed to capture image'}
+# def signup_facecap():
+#     ret, frame = camera.read()
+#     if ret:
+#         image_path = "static/imagestore/captured_image.jpg"
+#         cv2.imwrite(image_path, frame)
+#         print("Image saved successfully!")
+#         return {'status': 'success', 'message': 'Image saved successfully'}
+#     else:
+#         print("Failed to capture image.")
+#         return {'status': 'error', 'message': 'Failed to capture image'}
 
 def generate_video_feed():
     while True:
@@ -46,6 +46,15 @@ def generate_video_feed():
                        b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
         else:
             continue
+      
+        if ret:
+            image_path = "static/imagestore/captured_image.jpg"
+            cv2.imwrite(image_path, frame)
+            print("Image saved successfully!")
+            return {'status': 'success', 'message': 'Image saved successfully'}
+        else:
+            print("Failed to capture image.")
+            return {'status': 'error', 'message': 'Failed to capture image'}
 
 @app.route('/')
 def home():
@@ -55,13 +64,14 @@ def home():
 def video_feed():
     return Response(generate_video_feed(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route("/signup", methods=['POST'])
+@app.route("/signup")
 def signup():
-    if 'capture' in request.form and request.form['capture'] == 'true':
-        response_data = signup_facecap()  # Call the function to capture and save the image
-        return json.dumps(response_data)
-    else:
-        exit
+    # if 'capture' in request.form and request.form['capture'] == 'true':
+    #     response_data = generate_video_feed() # Call the function to capture and save the image
+    #     return json.dumps(response_data)
+    # else:
+    #     exit
+    return render_template("/signup.html")
 
 if __name__ == '__main__':
     capture_thread = threading.Thread(target=generate_video_feed)
